@@ -20,7 +20,8 @@ def get_db_connection():
         dbname=os.getenv('DB_NAME'),
         user=os.getenv('DB_USER'),
         password=os.getenv('DB_PASSWORD'),        
-        # sslmode='require' #Azure를 위해 반드시 추가
+        sslmode='require', #Azure를 위해 반드시 추가
+        options= '-c timezone=Asia/Seoul' #한국 시간 맞추기
     )
     print('get_db_connection', conn)
     conn.autocommit = True
