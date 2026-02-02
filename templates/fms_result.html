@@ -1,0 +1,23 @@
+{% extends 'base.html' %} {% block title %}FMS 결과 보기{% endblock %} {% block
+content %}
+
+<h2>FMS 통합 결과</h2>
+<table>
+  <thead>
+    <tr>
+      {% for column in results[0].keys() %}
+      <th>{{ column }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in results %}
+    <tr>
+      {% for key, value in row.items() %}
+      <td>{{ value }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

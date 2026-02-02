@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="p-6 bg-gray-50 min-h-screen">
+    <h1 class="text-3xl font-bold mb-8 text-gray-800">Farm Management Dashboard</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-indigo-500">
+            <p class="text-sm text-gray-500 uppercase font-bold">전체 개체 수</p>
+            <p class="text-3xl font-extrabold text-indigo-600">{{ summary.total }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+            <p class="text-sm text-gray-500 uppercase font-bold">평균 난중 (g)</p>
+            <p class="text-3xl font-extrabold text-green-600">{{ summary.avg_weight|round(2) }}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h3 class="text-xl font-bold mb-4">품종별 분포</h3>
+            <canvas id="breedChart"></canvas>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h3 class="text-xl font-bold mb-4">최근 부화 개체</h3>
+            <table class="min-w-full text-sm">
+                <thead>
+                    <tr class="border-b">
+                        <th class="py-2 text-left">No.</th>
+                        <th class="py-2 text-left">품종</th>
+                        <th class="py-2 text-left">부화일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for chick in recent_chicks %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-2">{{ chick.chick_no }}</td>
+                        <td class="py-2">{{ chick.breeds }}</td>
+                        <td class="py-2">{{ chick.hatchday }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('breedChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [{% for row in breed_stats %}'{{ row.breeds }}',{% endfor %}],
+            datasets: [{
+                data: [{% for row in breed_stats %}{{ row.count }},{% endfor %}],
+                backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444']
+            }]
+        }
+    });
+</script>
+{% endblock %}
